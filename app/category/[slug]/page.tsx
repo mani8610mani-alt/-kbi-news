@@ -1,3 +1,5 @@
+export const revalidate = 60
+
 import { client } from '@/sanity/client'
 import { articlesByCategoryQuery, categoryBySlugQuery, categoriesQuery } from '@/sanity/queries'
 import Header from '@/components/Header'

@@ -1,3 +1,5 @@
+export const revalidate = 60
+
 import { client, urlFor } from '@/sanity/client'
 import { articleBySlugQuery, categoriesQuery } from '@/sanity/queries'
 import { PortableText, PortableTextComponents } from '@portabletext/react'
