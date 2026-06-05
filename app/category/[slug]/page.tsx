@@ -4,9 +4,18 @@ import Header from '@/components/Header'
 import Footer from '@/components/Footer'
 import ArticleCard from '@/components/ArticleCard'
 import { notFound } from 'next/navigation'
+import Link from 'next/link'
 import type { Metadata } from 'next'
 
-type Category = { _id: string; name: string; slug: { current: string }; description?: string }
+type SubCategory = { _id: string; name: string; slug: { current: string } }
+type Category = {
+  _id: string
+  name: string
+  slug: { current: string }
+  description?: string
+  parent?: { _id: string; name: string; slug: { current: string } }
+  children?: SubCategory[]
+}
 type Article = {
   _id: string
   title: string
@@ -48,11 +57,35 @@ export default async function CategoryPage({
       <Header categories={categories} />
       <main className="max-w-7xl mx-auto px-4 py-8 flex-1 w-full">
         <div className="border-b border-gray-200 pb-5 mb-8">
-          <h1 className="text-2xl font-extrabold text-[#0a2463]">{category.name}</h1>
+          {category.parent && (
+            <Link
+              href={`/category/${category.parent.slug.current}`}
+              className="text-xs text-[#0a2463] hover:underline font-semibold"
+            >
+              {category.parent.name}
+            </Link>
+          )}
+          <h1 className="text-2xl font-extrabold text-[#0a2463] mt-1">{category.name}</h1>
           {category.description && (
             <p className="text-gray-500 mt-2">{category.description}</p>
           )}
         </div>
+
+        {/* 대분류인 경우 소분류 목록 표시 */}
+        {category.children && category.children.length > 0 && (
+          <div className="flex flex-wrap gap-2 mb-8">
+            {category.children.map(sub => (
+              <Link
+                key={sub._id}
+                href={`/category/${sub.slug.current}`}
+                className="px-4 py-1.5 rounded-full border border-[#0a2463] text-[#0a2463] text-sm font-medium hover:bg-[#0a2463] hover:text-white transition-colors"
+              >
+                {sub.name}
+              </Link>
+            ))}
+          </div>
+        )}
+
         {articles.length > 0 ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {articles.map(article => (

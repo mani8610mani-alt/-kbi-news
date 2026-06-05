@@ -2,13 +2,18 @@ import { groq } from 'next-sanity'
 
 export const categoriesQuery = groq`
   *[_type == "category"] | order(name asc) {
-    _id, name, slug, description
+    _id, name, slug, description,
+    parent->{_id, name, slug}
   }
 `
 
 export const categoryBySlugQuery = groq`
   *[_type == "category" && slug.current == $slug][0] {
-    _id, name, slug, description
+    _id, name, slug, description,
+    parent->{_id, name, slug},
+    "children": *[_type == "category" && parent->slug.current == $slug] | order(name asc) {
+      _id, name, slug
+    }
   }
 `
 
