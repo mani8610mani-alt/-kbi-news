@@ -34,7 +34,8 @@ export async function generateMetadata({
 }: {
   params: Promise<{ slug: string }>
 }): Promise<Metadata> {
-  const { slug } = await params
+  const { slug: rawSlug } = await params
+  const slug = decodeURIComponent(rawSlug)
   const category = await client.fetch<Category | null>(categoryBySlugQuery, { slug })
   if (!category) return {}
   return { title: category.name, description: category.description }
@@ -45,7 +46,8 @@ export default async function CategoryPage({
 }: {
   params: Promise<{ slug: string }>
 }) {
-  const { slug } = await params
+  const { slug: rawSlug } = await params
+  const slug = decodeURIComponent(rawSlug)
   const [category, articles, categories] = await Promise.all([
     client.fetch<Category | null>(categoryBySlugQuery, { slug }),
     client.fetch<Article[]>(articlesByCategoryQuery, { slug }),
