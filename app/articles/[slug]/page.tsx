@@ -50,7 +50,8 @@ export async function generateMetadata({
 }: {
   params: Promise<{ slug: string }>
 }): Promise<Metadata> {
-  const { slug } = await params
+  const { slug: rawSlug } = await params
+  const slug = decodeURIComponent(rawSlug)
   const article = await client.fetch<Article | null>(articleBySlugQuery, { slug })
   if (!article) return {}
   return {
@@ -64,7 +65,8 @@ export default async function ArticlePage({
 }: {
   params: Promise<{ slug: string }>
 }) {
-  const { slug } = await params
+  const { slug: rawSlug } = await params
+  const slug = decodeURIComponent(rawSlug)
   const [article, categories] = await Promise.all([
     client.fetch<Article | null>(articleBySlugQuery, { slug }),
     client.fetch<Category[]>(categoriesQuery),
