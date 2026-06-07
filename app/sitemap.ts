@@ -15,14 +15,14 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const { articles, categories } = await client.fetch<SitemapData>(sitemapQuery)
 
   const articleEntries: MetadataRoute.Sitemap = articles.map(a => ({
-    url: `${BASE_URL}/articles/${a.slug}`,
+    url: `${BASE_URL}/articles/${encodeURIComponent(a.slug)}`,
     lastModified: a.publishedAt ? new Date(a.publishedAt) : new Date(),
     changeFrequency: 'weekly',
     priority: 0.8,
   }))
 
   const categoryEntries: MetadataRoute.Sitemap = categories.map(c => ({
-    url: `${BASE_URL}/category/${c.slug}`,
+    url: `${BASE_URL}/category/${encodeURIComponent(c.slug)}`,
     changeFrequency: 'weekly',
     priority: 0.6,
   }))
