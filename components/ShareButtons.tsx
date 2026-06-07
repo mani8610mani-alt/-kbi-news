@@ -21,10 +21,11 @@ const KAKAO_KEY = process.env.NEXT_PUBLIC_KAKAO_APP_KEY
 type Props = {
   url: string
   title: string
+  description?: string
   imageUrl?: string
 }
 
-export default function ShareButtons({ url, title, imageUrl }: Props) {
+export default function ShareButtons({ url, title, description, imageUrl }: Props) {
   const [copied, setCopied] = useState(false)
 
   const handleCopy = async () => {
@@ -42,20 +43,22 @@ export default function ShareButtons({ url, title, imageUrl }: Props) {
   const handleKakao = () => {
     if (!window.Kakao) return
     if (!window.Kakao.isInitialized()) window.Kakao.init(KAKAO_KEY!)
+    const encodedUrl = encodeURI(url)
     if (imageUrl) {
       window.Kakao.Share.sendDefault({
         objectType: 'feed',
         content: {
           title,
+          description: description ?? '',
           imageUrl,
-          link: { mobileWebUrl: url, webUrl: url },
+          link: { mobileWebUrl: encodedUrl, webUrl: encodedUrl },
         },
       })
     } else {
       window.Kakao.Share.sendDefault({
         objectType: 'text',
-        text: title,
-        link: { mobileWebUrl: url, webUrl: url },
+        text: `${title}\n${encodedUrl}`,
+        link: { mobileWebUrl: encodedUrl, webUrl: encodedUrl },
       })
     }
   }

@@ -169,8 +169,9 @@ export default async function ArticlePage({
         )}
 
         <ShareButtons
-          url={`https://kbi-news.vercel.app/articles/${slug}`}
+          url={`https://kbi-news.vercel.app/articles/${encodeURIComponent(slug)}`}
           title={article.title}
+          description={article.excerpt}
           imageUrl={article.coverImage ? urlFor(article.coverImage).width(800).url() : undefined}
         />
 
