@@ -39,6 +39,12 @@ export default function ShareButtons({ url, title, imageUrl }: Props) {
     setTimeout(() => setCopied(false), 2000)
   }
 
+  const handleKakaoLoad = () => {
+    if (window.Kakao && !window.Kakao.isInitialized()) {
+      window.Kakao.init(KAKAO_KEY!)
+    }
+  }
+
   const handleKakao = () => {
     if (!window.Kakao) return
     if (!window.Kakao.isInitialized()) window.Kakao.init(KAKAO_KEY!)
@@ -57,7 +63,11 @@ export default function ShareButtons({ url, title, imageUrl }: Props) {
   return (
     <>
       {KAKAO_KEY && (
-        <Script src="https://developers.kakao.com/sdk/js/kakao.js" strategy="lazyOnload" />
+        <Script
+          src="https://developers.kakao.com/sdk/js/kakao.js"
+          strategy="afterInteractive"
+          onLoad={handleKakaoLoad}
+        />
       )}
       <div className="flex items-center gap-3 mt-10 pt-8 border-t border-gray-200">
         <span className="text-sm text-gray-500 font-medium mr-1">공유</span>
