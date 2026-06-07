@@ -79,7 +79,7 @@ export default function ShareButtons({ url, title, description, imageUrl }: Prop
         {KAKAO_KEY && (
           <button
             onClick={handleKakao}
-            className="px-4 py-2 rounded-full bg-[#FEE500] text-black text-sm font-medium hover:bg-yellow-300 transition-colors"
+            className="px-4 py-2 rounded-full bg-[#FEE500] text-black text-sm font-medium hover:bg-yellow-300 hover:shadow-md active:scale-95 transition-all duration-150 cursor-pointer"
           >
             카카오톡
           </button>
@@ -88,13 +88,13 @@ export default function ShareButtons({ url, title, description, imageUrl }: Prop
           href={xUrl}
           target="_blank"
           rel="noopener noreferrer"
-          className="px-4 py-2 rounded-full bg-black text-white text-sm font-medium hover:bg-gray-800 transition-colors"
+          className="px-4 py-2 rounded-full bg-black text-white text-sm font-medium hover:bg-gray-700 hover:shadow-md active:scale-95 transition-all duration-150"
         >
           X
         </a>
         <button
           onClick={handleCopy}
-          className="px-4 py-2 rounded-full border border-gray-300 text-sm font-medium hover:bg-gray-50 transition-colors"
+          className="px-4 py-2 rounded-full border border-gray-300 text-sm font-medium hover:bg-gray-100 hover:border-gray-400 hover:shadow-md active:scale-95 transition-all duration-150 cursor-pointer"
         >
           {copied ? '✓ 복사됨' : '링크 복사'}
         </button>
