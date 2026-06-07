@@ -54,9 +54,27 @@ export async function generateMetadata({
   const slug = decodeURIComponent(rawSlug)
   const article = await client.fetch<Article | null>(articleBySlugQuery, { slug })
   if (!article) return {}
+
+  const ogImage = article.coverImage
+    ? urlFor(article.coverImage).width(1200).height(630).url()
+    : undefined
+
   return {
     title: article.title,
     description: article.excerpt,
+    openGraph: {
+      type: 'article',
+      title: article.title,
+      description: article.excerpt,
+      publishedTime: article.publishedAt,
+      ...(ogImage && { images: [{ url: ogImage, width: 1200, height: 630 }] }),
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: article.title,
+      description: article.excerpt,
+      ...(ogImage && { images: [ogImage] }),
+    },
   }
 }
 
@@ -74,8 +92,29 @@ export default async function ArticlePage({
 
   if (!article) notFound()
 
+  const jsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'NewsArticle',
+    headline: article.title,
+    description: article.excerpt ?? '',
+    image: article.coverImage
+      ? [urlFor(article.coverImage).width(1200).height(630).url()]
+      : [],
+    datePublished: article.publishedAt ?? '',
+    author: article.author ? [{ '@type': 'Person', name: article.author.name }] : [],
+    publisher: {
+      '@type': 'Organization',
+      name: 'KBI News',
+      url: 'https://kbi-news.vercel.app',
+    },
+  }
+
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
       <Header categories={categories} />
       <main className="max-w-3xl mx-auto px-4 py-10 flex-1 w-full">
         {article.category && (

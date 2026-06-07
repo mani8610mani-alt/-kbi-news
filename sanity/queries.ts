@@ -48,3 +48,13 @@ export const articlesByCategoryQuery = groq`
     author->{name, role}
   }
 `
+
+export const sitemapQuery = groq`{
+  "articles": *[_type == "article"] | order(publishedAt desc) {
+    "slug": slug.current,
+    publishedAt
+  },
+  "categories": *[_type == "category"] {
+    "slug": slug.current
+  }
+}`

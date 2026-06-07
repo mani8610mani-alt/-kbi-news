@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import './globals.css'
 
 export const metadata: Metadata = {
+  metadataBase: new URL('https://kbi-news.vercel.app'),
   title: {
     default: 'KBI News — K-Business & Industry',
     template: '%s | KBI News',
