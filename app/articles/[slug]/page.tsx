@@ -4,6 +4,7 @@ export const dynamicParams = true
 import { client, urlFor } from '@/sanity/client'
 import { articleBySlugQuery, categoriesQuery, relatedArticlesQuery } from '@/sanity/queries'
 import ArticleCard from '@/components/ArticleCard'
+import ShareButtons from '@/components/ShareButtons'
 import { PortableText, PortableTextComponents } from '@portabletext/react'
 import Header from '@/components/Header'
 import Footer from '@/components/Footer'
@@ -166,6 +167,12 @@ export default async function ArticlePage({
             <PortableText value={article.body} components={portableTextComponents} />
           </div>
         )}
+
+        <ShareButtons
+          url={`https://kbi-news.vercel.app/articles/${slug}`}
+          title={article.title}
+          imageUrl={article.coverImage ? urlFor(article.coverImage).width(800).url() : undefined}
+        />
 
         {related.length > 0 && (
           <section className="mt-16 pt-10 border-t border-gray-200">
