@@ -49,6 +49,14 @@ export const articlesByCategoryQuery = groq`
   }
 `
 
+export const relatedArticlesQuery = groq`
+  *[_type == "article" && category->slug.current == $categorySlug && slug.current != $slug] | order(publishedAt desc)[0...3] {
+    _id, title, slug, excerpt, coverImage, publishedAt,
+    category->{name, slug},
+    author->{name, role}
+  }
+`
+
 export const sitemapQuery = groq`{
   "articles": *[_type == "article"] | order(publishedAt desc) {
     "slug": slug.current,

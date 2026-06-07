@@ -2,7 +2,8 @@ export const revalidate = 60
 export const dynamicParams = true
 
 import { client, urlFor } from '@/sanity/client'
-import { articleBySlugQuery, categoriesQuery } from '@/sanity/queries'
+import { articleBySlugQuery, categoriesQuery, relatedArticlesQuery } from '@/sanity/queries'
+import ArticleCard from '@/components/ArticleCard'
 import { PortableText, PortableTextComponents } from '@portabletext/react'
 import Header from '@/components/Header'
 import Footer from '@/components/Footer'
@@ -90,6 +91,13 @@ export default async function ArticlePage({
     client.fetch<Category[]>(categoriesQuery),
   ])
 
+  const related = article?.category
+    ? await client.fetch<Article[]>(relatedArticlesQuery, {
+        slug,
+        categorySlug: article.category.slug.current,
+      })
+    : []
+
   if (!article) notFound()
 
   const jsonLd = {
@@ -157,6 +165,19 @@ export default async function ArticlePage({
           <div className="prose">
             <PortableText value={article.body} components={portableTextComponents} />
           </div>
+        )}
+
+        {related.length > 0 && (
+          <section className="mt-16 pt-10 border-t border-gray-200">
+            <h2 className="text-lg font-extrabold border-l-4 border-[#0a2463] pl-3 mb-6 text-[#0a2463]">
+              관련 기사
+            </h2>
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
+              {related.map(r => (
+                <ArticleCard key={r._id} article={r} />
+              ))}
+            </div>
+          </section>
         )}
       </main>
       <Footer />
