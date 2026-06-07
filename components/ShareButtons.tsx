@@ -9,14 +9,8 @@ declare global {
       init: (key: string) => void
       isInitialized: () => boolean
       Share: {
-        sendDefault: (options: {
-          objectType: string
-          content: {
-            title: string
-            imageUrl?: string
-            link: { mobileWebUrl: string; webUrl: string }
-          }
-        }) => void
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        sendDefault: (options: Record<string, any>) => void
       }
     }
   }
@@ -48,14 +42,22 @@ export default function ShareButtons({ url, title, imageUrl }: Props) {
   const handleKakao = () => {
     if (!window.Kakao) return
     if (!window.Kakao.isInitialized()) window.Kakao.init(KAKAO_KEY!)
-    window.Kakao.Share.sendDefault({
-      objectType: 'feed',
-      content: {
-        title,
-        ...(imageUrl && { imageUrl }),
+    if (imageUrl) {
+      window.Kakao.Share.sendDefault({
+        objectType: 'feed',
+        content: {
+          title,
+          imageUrl,
+          link: { mobileWebUrl: url, webUrl: url },
+        },
+      })
+    } else {
+      window.Kakao.Share.sendDefault({
+        objectType: 'text',
+        text: title,
         link: { mobileWebUrl: url, webUrl: url },
-      },
-    })
+      })
+    }
   }
 
   const xUrl = `https://x.com/intent/tweet?url=${encodeURIComponent(url)}&text=${encodeURIComponent(title)}`
