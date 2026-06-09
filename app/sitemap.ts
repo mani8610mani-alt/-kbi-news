@@ -1,10 +1,11 @@
 import type { MetadataRoute } from 'next'
 import { client } from '@/sanity/client'
 import { sitemapQuery } from '@/sanity/queries'
+import { SITE_URL } from '@/lib/config'
 
 export const revalidate = 3600
 
-const BASE_URL = 'https://kbi-news.vercel.app'
+const BASE_URL = SITE_URL
 
 type SitemapData = {
   articles: { slug: string; publishedAt: string | null }[]

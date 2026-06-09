@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import Script from 'next/script'
 
 declare global {
@@ -26,12 +26,25 @@ type Props = {
 }
 
 export default function ShareButtons({ url, title, description, imageUrl }: Props) {
-  const [copied, setCopied] = useState(false)
+  const [copyState, setCopyState] = useState<'idle' | 'copied' | 'error'>('idle')
+  const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null)
+
+  useEffect(() => {
+    return () => {
+      if (timeoutRef.current) clearTimeout(timeoutRef.current)
+    }
+  }, [])
 
   const handleCopy = async () => {
-    await navigator.clipboard.writeText(url)
-    setCopied(true)
-    setTimeout(() => setCopied(false), 2000)
+    try {
+      await navigator.clipboard.writeText(url)
+      setCopyState('copied')
+    } catch {
+      setCopyState('error')
+    } finally {
+      if (timeoutRef.current) clearTimeout(timeoutRef.current)
+      timeoutRef.current = setTimeout(() => setCopyState('idle'), 2000)
+    }
   }
 
   const handleKakaoLoad = () => {
@@ -96,7 +109,7 @@ export default function ShareButtons({ url, title, description, imageUrl }: Prop
           onClick={handleCopy}
           className="px-4 py-2 rounded-full border border-gray-300 text-sm font-medium hover:bg-gray-100 hover:border-gray-400 hover:shadow-md active:scale-95 transition-all duration-150 cursor-pointer"
         >
-          {copied ? '✓ 복사됨' : '링크 복사'}
+          {copyState === 'copied' ? '✓ 복사됨' : copyState === 'error' ? '복사 실패' : '링크 복사'}
         </button>
       </div>
     </>

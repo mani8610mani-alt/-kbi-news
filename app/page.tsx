@@ -1,6 +1,6 @@
 export const revalidate = 60
 
-import { client } from '@/sanity/client'
+import { freshClient as client } from '@/sanity/client'
 import { latestArticlesQuery, featuredArticleQuery, categoriesQuery } from '@/sanity/queries'
 import Header from '@/components/Header'
 import Footer from '@/components/Footer'

@@ -1,7 +1,8 @@
 export const revalidate = 60
 export const dynamicParams = true
 
-import { client, urlFor } from '@/sanity/client'
+import { freshClient as client, urlFor } from '@/sanity/client'
+import { SITE_URL } from '@/lib/config'
 import { articleBySlugQuery, categoriesQuery, relatedArticlesQuery } from '@/sanity/queries'
 import ArticleCard from '@/components/ArticleCard'
 import ShareButtons from '@/components/ShareButtons'
@@ -114,7 +115,7 @@ export default async function ArticlePage({
     publisher: {
       '@type': 'Organization',
       name: 'KBI News',
-      url: 'https://kbi-news.vercel.app',
+      url: SITE_URL,
     },
   }
 
@@ -169,7 +170,7 @@ export default async function ArticlePage({
         )}
 
         <ShareButtons
-          url={`https://kbi-news.vercel.app/articles/${encodeURIComponent(slug)}`}
+          url={`${SITE_URL}/articles/${encodeURIComponent(slug)}`}
           title={article.title}
           description={article.excerpt}
           imageUrl={article.coverImage ? urlFor(article.coverImage).width(800).url() : undefined}

@@ -1,9 +1,10 @@
 import type { Metadata } from 'next'
 import { Analytics } from '@vercel/analytics/next'
+import { SITE_URL } from '@/lib/config'
 import './globals.css'
 
 export const metadata: Metadata = {
-  metadataBase: new URL('https://kbi-news.vercel.app'),
+  metadataBase: new URL(SITE_URL),
   title: {
     default: 'KBI News — K-Business & Industry',
     template: '%s | KBI News',
